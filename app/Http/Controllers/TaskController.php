@@ -12,10 +12,24 @@ class TaskController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $tasks = Auth::user()->tasks;
-        return response()->json($tasks);
+      $user = Auth::user();
+      $query = $user->tasks();
+
+      if($request->has('search') && !empty($request->search)){
+          $query->where(function ($query) use ($request) {
+              $query->where('name', 'like', '%' . $request->search . '%')
+                  ->orWhere('description', 'like', '%' . $request->search . '%');
+          });
+      }
+      if($request->has('product_id') && !empty($request->product_id)) {
+
+          $query->where('product_id', $request->product_id);
+      }
+
+      $tasks = $query->orderBy('created_at', 'desc')->paginate(10);
+      return response()->json($tasks,200);
     }
 
     /**
