@@ -18,10 +18,9 @@ class TaskFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->sentence,
-            'description' => $this->faker->paragraph,
-            'product_id' => $this->faker->numberBetween(1, 20),
-            'user_id' => User::factory(),
+           'name' => $this->faker->sentence(),
+            'description' => $this->faker->paragraph(),
+
 
         ];
     }
